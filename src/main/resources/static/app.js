@@ -8,6 +8,7 @@ var app = (function () {
     }
     
     var stompClient = null;
+	var num = null;
 
     var addPointToCanvas = function (point) {        
         var canvas = document.getElementById("canvas");
@@ -37,7 +38,7 @@ var app = (function () {
         //subscribe to /topic/TOPICXX when connections succeed
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/newpoint', function (eventbody) {
+            stompClient.subscribe('/topic/newpoint.'+num, function (eventbody) {
 				//alert("Evento Recibido");
                 var pt=JSON.parse(eventbody.body);
 				addPointToCanvas(pt);
@@ -47,16 +48,22 @@ var app = (function () {
     };
 	
 	var publishEvent = function (pt){
-		stompClient.send("/topic/newpoint", {}, JSON.stringify(pt));
+		stompClient.send("/topic/newpoint."+num, {}, JSON.stringify(pt));
 	};       
 
     return {
 
         init: function () {
             var can = document.getElementById("canvas");
-            
+			var aceptar = true;
+			while(aceptar){
+				num = prompt("Ingresar el numero del dibujo");
+				if(!(num == null || null == "")){
+					aceptar = false;
+				}
+			}
             //websocket connection
-            connectAndSubscribe();
+            connectAndSubscribe(num);
         },
 
         publishPoint: function(px,py){
