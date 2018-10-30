@@ -15,6 +15,7 @@ var app = (function () {
         ctx.beginPath();
         ctx.arc(point.x, point.y, 3, 0, 2 * Math.PI);
         ctx.stroke();
+		
     };
     
     
@@ -36,15 +37,18 @@ var app = (function () {
         //subscribe to /topic/TOPICXX when connections succeed
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/TOPICXX', function (eventbody) {
-                
-                
+            stompClient.subscribe('/topic/newpoint', function (eventbody) {
+				alert("Evento Recibido");
+                var pt=JSON.parse(eventbody.body);
+				addPointToCanvas(pt);
             });
         });
 
     };
-    
-    
+	
+	var publishEvent = function (pt){
+		stompClient.send("/topic/newpoint", {}, JSON.stringify(pt));
+	};       
 
     return {
 
@@ -61,6 +65,7 @@ var app = (function () {
             addPointToCanvas(pt);
 
             //publicar el evento
+			publishEvent(pt);
         },
 
         disconnect: function () {
