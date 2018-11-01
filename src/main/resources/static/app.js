@@ -18,6 +18,21 @@ var app = (function () {
         ctx.stroke();
 		
     };
+	
+	var addPolygonToCanvas = function(body){	
+		var canvas = document.getElementById("canvas");
+        var ctx = canvas.getContext("2d");
+		ctx.fillStyle = "rgb(41,155,243)";
+		ctx.beginPath();
+		ctx.moveTo(body[0].x, body[0].y);
+		for(var i = 0; i<body.length;i++){
+			//addPointToCanvas(body[i]);
+			console.log(body[i].x);			
+			ctx.lineTo(body[i].x, body[i].y);			
+		}		
+		ctx.closePath();
+		ctx.fill();		
+	}
     
     
     var getMousePosition = function (evt) {
@@ -38,17 +53,19 @@ var app = (function () {
         //subscribe to /topic/TOPICXX when connections succeed
         stompClient.connect({}, function (frame) {
             console.log('Connected: ' + frame);
-            stompClient.subscribe('/topic/newpoint.'+num, function (eventbody) {
+            stompClient.subscribe('/topic/newpolygon.'+num, function (eventbody) {
 				//alert("Evento Recibido");
-                var pt=JSON.parse(eventbody.body);
-				addPointToCanvas(pt);
+                //var pt=JSON.parse(eventbody.body);
+				//addPointToCanvas(pt);
+				//console.log(eventbody);
+				addPolygonToCanvas(JSON.parse(eventbody.body));				
             });
         });
 
     };
 	
 	var publishEvent = function (pt){
-		stompClient.send("/topic/newpoint."+num, {}, JSON.stringify(pt));
+		stompClient.send("/app/newpoint."+num, {}, JSON.stringify(pt));
 	};       
 
     return {
@@ -85,3 +102,7 @@ var app = (function () {
     };
 
 })();
+
+document.onmousedown = function(e){
+	app.publishPoint(e.pageX, e.pageY);
+}
