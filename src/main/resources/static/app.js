@@ -26,8 +26,7 @@ var app = (function () {
 		ctx.beginPath();
 		ctx.moveTo(body[0].x, body[0].y);
 		for(var i = 0; i<body.length;i++){
-			//addPointToCanvas(body[i]);
-			console.log(body[i].x);			
+			//addPointToCanvas(body[i]);				
 			ctx.lineTo(body[i].x, body[i].y);			
 		}		
 		ctx.closePath();
@@ -74,8 +73,8 @@ var app = (function () {
             var can = document.getElementById("canvas");
 			var aceptar = true;
 			while(aceptar){
-				num = prompt("Ingresar el numero del dibujo");
-				if(!(num == null || null == "")){
+				num = prompt("Ingresar el numero del dibujo");				
+				if(num != null && num != ""){					
 					aceptar = false;
 				}
 			}
