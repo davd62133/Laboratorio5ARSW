@@ -1,1 +1,1 @@
-
+Arquitectura: el cliente se suscribe al topico del servidor, entonces apenas haya hecho un cambio, envia un mensaje al message broker del mismo, enontonces apenas hayan un grupo de puntos, envia un mensaje al topico a la cual cada cliente se suscribio y asi dibuja la figura
